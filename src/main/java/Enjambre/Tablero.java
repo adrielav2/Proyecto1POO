@@ -10,6 +10,7 @@ import java.awt.Color;
 import java.util.ArrayList;
 import javax.swing.JButton;
 import java.util.Random;
+import javax.swing.BorderFactory;
 
 /**
  *
@@ -126,8 +127,11 @@ public class Tablero extends javax.swing.JFrame {
                 botones[i][j] = new JButton();
                 botones[i][j].setBackground(Color.white);
                 botones[i][j].setBounds(i*TAMANO, j*TAMANO, TAMANO, TAMANO);
+                botones[i][j].setBorder(BorderFactory.createEmptyBorder());
                 pnlPantalla.add(botones[i][j]);
             }
+            
+ 
         }
         
         Obstaculos= new ArrayList();        
