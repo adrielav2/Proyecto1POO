@@ -1,12 +1,8 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package Enjambre;
 
 import Treads.threadTime;
 import java.awt.Color;
+import java.awt.event.KeyListener;
 import java.util.ArrayList;
 import javax.swing.JButton;
 import java.util.Random;
@@ -18,23 +14,40 @@ import javax.swing.BorderFactory;
  */
 public class Tablero extends javax.swing.JFrame {
 
+    //Para calcular numeros random
+    Random rand;
+
     //DIMENSION
     private final int DIMENSION = 50;
     private final int TAMANO = 13;//650(tamaño del panel principal)/50(cantidad de casillas)
 
+    private final int[][] Aro1 = {{-1, -1}, {-1, 0}, {-1, 1},
+    {0, -1}, {0, 1},
+    {1, -1}, {1, 0}, {1, 1}
+    };
+
+    private final int[][] Aro2 = {{-2, -2}, {-2, -1}, {-2, 0}, {-2, 1}, {-2, 2},
+    {-1, -2}, {-1, 2},
+    {0, -2}, {0, 2},
+    {1, -2}, {1, 2},
+    {2, -2}, {2, -1}, {2, 0}, {2, 1}, {2, 2}
+    };
+
     JButton botones[][];
     threadTime thread;
-    
-    private ArrayList <Defensor> Defensores;
-    private ArrayList <Recolector> Recolectores;
-    private ArrayList <Amenaza> Amenazas;
-    
-    private ArrayList <Recurso> Recursos;
-    private ArrayList <Obstaculo> Obstaculos;
+
+    private ArrayList<Defensor> Defensores;
+    private ArrayList<Recolector> Recolectores;
+    private ArrayList<Amenaza> Amenazas;
+
+    private ArrayList<Recurso> Recursos;
+    private ArrayList<Obstaculo> Obstaculos;
 
     public Tablero() {
         initComponents();
+        rand = new Random();
         initTablero();
+        this.setResizable(false);
         //thread = new threadTime(this);
         //thread.start();
     }
@@ -115,109 +128,482 @@ public class Tablero extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void continuarBTNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_continuarBTNActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_continuarBTNActionPerformed
-
     private void initTablero() {
         botones = new JButton[DIMENSION][DIMENSION];
         //pnlPantalla.setLayout(new java.awt.GridLayout(50, 50));
         for (int i = 0; i < DIMENSION; i++) {
             for (int j = 0; j < DIMENSION; j++) {
                 botones[i][j] = new JButton();
+                botones[i][j].setName(i + "_" + j);
                 botones[i][j].setBackground(Color.white);
-                botones[i][j].setBounds(i*TAMANO, j*TAMANO, TAMANO, TAMANO);
+                botones[i][j].setBounds(j * TAMANO, i * TAMANO, TAMANO, TAMANO);
                 botones[i][j].setBorder(BorderFactory.createEmptyBorder());
+                botones[i][j].addMouseListener(new java.awt.event.MouseAdapter() {//pone a la casilla a la escucha del mouse para saber cuando se esta dando clic
+                    @Override
+                    public void mouseClicked(java.awt.event.MouseEvent evt) {
+                        Click(evt);//llama al metodo que debe ejecutarse cuando se da clic
+                    }
+                });;
                 pnlPantalla.add(botones[i][j]);
             }
-            
- 
         }
-        
-        Obstaculos= new ArrayList();        
-        for (int i = 20; i < 24; i++) {
-            for (int j = 0; j <12  ; j++) {
-                Obstaculo obs= new Obstaculo(i,j);
-                Obstaculos.add(obs);
-                botones[i][j].setBackground(Color.black);
+
+        //Este ciclo anidado genera los obtaculos de forma aleatorio
+        Obstaculos = new <Obstaculo>ArrayList();
+        int cantObtaculos = rand.nextInt(5) + 5, linea = rand.nextInt(10) + 5;
+        int px, py;
+        while (cantObtaculos != 0) {
+            px = rand.nextInt(40) + 5;
+            py = rand.nextInt(40) + 5;
+            while (linea != 0) {
+                try {
+                    botones[px][py].setBackground(Color.black);
+                    Obstaculos.add(new Obstaculo(px, py));
+                } catch (ArrayIndexOutOfBoundsException e) {
+                    //System.out.println(e.toString());
+                } finally {
+                    if (cantObtaculos % 2 == 0) {
+                        px++;
+                    } else {
+                        py++;
+                    }
+                    linea--;
                 }
             }
-        
-        for (int i = 35; i < 38; i++) {
-            for (int j = 40; j <50  ; j++) {
-                Obstaculo obs= new Obstaculo(i,j);
-                Obstaculos.add(obs);
-                botones[i][j].setBackground(Color.black);
-                }
-            }
-        
-        for (int i =10; i < 13; i++) {
-            for (int j = 30; j <40  ; j++) {
-                Obstaculo obs= new Obstaculo(i,j);
-                Obstaculos.add(obs);
-                botones[i][j].setBackground(Color.black);
-                }
-            }
-       
-        for (int i =0; i < 10; i++) {
-            for (int j = 30; j <32  ; j++) {
-                Obstaculo obs= new Obstaculo(i,j);
-                Obstaculos.add(obs);
-                botones[i][j].setBackground(Color.black);
-                }
-            }
-        
-        for (int i =39; i < 43; i++) {
-            for (int j = 15; j <30  ; j++) {
-                Obstaculo obs= new Obstaculo(i,j);
-                Obstaculos.add(obs);
-                botones[i][j].setBackground(Color.black);
-                }
-            }
-        for (int i =5; i < 25; i++) {
-            for (int j = 21; j <24 ; j++) {
-                Obstaculo obs= new Obstaculo(i,j);
-                Obstaculos.add(obs);
-                botones[i][j].setBackground(Color.black);
-                }
-            }
-        
-        Recursos= new ArrayList();
-        int count= 0;
-        while(count!=10){
-            Random rand=new Random();
-            int num_rand1= rand.nextInt(50);
-            int num_rand2= rand.nextInt(50);
-            if (!"java.awt.Color[r=0,g=0,b=0]".equals(botones[num_rand1][num_rand2].getBackground().toString())){
-                Recurso rec=new Recurso(num_rand1,num_rand2);
+            linea = rand.nextInt(10) + 5;
+            cantObtaculos--;
+        }
+
+        Recursos = new <Recurso>ArrayList();
+        int count = 0;
+        while (count != 4) {
+            int num_rand1 = rand.nextInt(48);
+            int num_rand2 = rand.nextInt(48);
+            if (botones[num_rand1][num_rand2].getBackground().equals(Color.white)) {
+                Recurso rec = new Recurso(num_rand1, num_rand2, num_rand1, num_rand2-1, num_rand1-1, num_rand2, num_rand1-1, num_rand2-1);
                 botones[num_rand1][num_rand2].setBackground(Color.yellow);
+                botones[num_rand1][num_rand2-1].setBackground(Color.yellow);
+                botones[num_rand1-1][num_rand2].setBackground(Color.yellow);
+                botones[num_rand1-1][num_rand2-1].setBackground(Color.yellow);
+                Recursos.add(rec);
                 count++;
             }
         }
-        
-        Amenazas= new ArrayList();
-        int count2=0;
-        while(count2!=5){
-            Random rand=new Random();
-            int num_rand1= rand.nextInt(50);
-           int num_rand2= rand.nextInt(50);
-           if (!"java.awt.Color[r=0,g=0,b=0]".equals(botones[num_rand1][num_rand2].getBackground().toString())) {
-               if (!"java.awt.Color[r=255,g=255,b=0]".equals(botones[num_rand1][num_rand2].getBackground().toString())) {
-                   Recurso rec=new Recurso(num_rand1,num_rand2);
-                   botones[num_rand1][num_rand2].setBackground(Color.red);
-                   count2++;
+
+        Amenazas = new <Amenaza>ArrayList();
+        int count2 = 0;
+        while (count2 != 6) {
+            int num_rand1 = rand.nextInt(50);
+            int num_rand2 = rand.nextInt(50);
+            if (botones[num_rand1][num_rand2].getBackground().equals(Color.white)) {
+                Amenaza amn = new Amenaza(num_rand1, num_rand2);
+                botones[num_rand1][num_rand2].setBackground(Color.red);
+                count2++;
+                Amenazas.add(amn);
+            }
+        }
+
+        this.Recolectores = new <Recolector>ArrayList();
+        count = 0;
+        while (count != 5) {
+            int num_rand1 = rand.nextInt(50);
+            int num_rand2 = rand.nextInt(50);
+            if (botones[num_rand1][num_rand2].getBackground().equals(Color.white)) {
+                Recolector rec = new Recolector(200, num_rand1, num_rand2);
+                botones[num_rand1][num_rand2].setBackground(Color.blue);
+                Recolectores.add(rec);
+                count++;
+            }
+        }
+
+        this.Defensores = new <Defensor>ArrayList();
+        count = 0;
+        while (count != 5) {
+            int num_rand1 = rand.nextInt(50);
+            int num_rand2 = rand.nextInt(50);
+            if (botones[num_rand1][num_rand2].getBackground().equals(Color.white)) {
+                Defensor def = new Defensor(100, num_rand1, num_rand2);
+                botones[num_rand1][num_rand2].setBackground(Color.green);
+                Defensores.add(def);
+                count++;
+            }
+        }
+    }
+
+    private void Click(java.awt.event.MouseEvent evt) {
+        System.out.println(evt.getComponent().getName());
+    }
+
+    private void continuarBTNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_continuarBTNActionPerformed
+        for (int i = 0; i < Recolectores.size(); i++) {
+            if (!(Recolectores.get(i).isOcupado() || Recolectores.get(i).isTarea())) {
+                mapearEnRecolector(i);
+            }
+            if (Recolectores.get(i).isOcupado()) {
+                moveRecolectorToEnjambre(i);
+            } else if (Recolectores.get(i).isTarea()) {
+                recogerRecursoRecolector(i);
+            } else {
+                moveRandomRecolectores(i);
+            }
+        }
+        for (int i = 0; i < Defensores.size(); i++) {
+            if (!(Defensores.get(i).isOcupado() || Defensores.get(i).isTarea())) {
+                mapearEnDefensor(i);
+            }
+            if (Defensores.get(i).isOcupado()) {
+                moveDefensorToEnjambre(i);
+            } else if (Defensores.get(i).isTarea()) {
+                recogerRecursoDefensor(i);
+            } else {
+                moveRandomDefensores(i);
+            }
+        }
+    }//GEN-LAST:event_continuarBTNActionPerformed
+
+    public void moveRandomRecolectores(int cual) {
+        int AleaX, AleaY;
+        while (true) {
+            AleaX = rand.nextInt(3) - 1;
+            AleaY = rand.nextInt(3) - 1;
+            try {
+                if ((AleaX == 0 || AleaY == 0)) {
+                    if (AleaX != AleaY) {
+                        if (botones[Recolectores.get(cual).getPosX() + AleaX][Recolectores.get(cual).getPosY() + AleaY].getBackground().equals(Color.white)) {
+                            botones[Recolectores.get(cual).getPosX() + AleaX][Recolectores.get(cual).getPosY() + AleaY].setBackground(Color.blue);
+                            botones[Recolectores.get(cual).getPosX()][Recolectores.get(cual).getPosY()].setBackground(Color.white);
+                            Recolectores.get(cual).setPosition(Recolectores.get(cual).getPosX() + AleaX, Recolectores.get(cual).getPosY() + AleaY);
+                            break;
+                        }
+                    }
+                } else {
+                    if (botones[Recolectores.get(cual).getPosX() + AleaX][Recolectores.get(cual).getPosY() + AleaY].getBackground().equals(Color.white)) {
+                        botones[Recolectores.get(cual).getPosX() + AleaX][Recolectores.get(cual).getPosY() + AleaY].setBackground(Color.blue);
+                        botones[Recolectores.get(cual).getPosX()][Recolectores.get(cual).getPosY()].setBackground(Color.white);
+                        Recolectores.get(cual).setPosition(Recolectores.get(cual).getPosX() + AleaX, Recolectores.get(cual).getPosY() + AleaY);
+                        break;
+                    }
+                }
+            } catch (IndexOutOfBoundsException e) {
+
+            }
+        }
+    }
+
+    public void mapearEnRecolector(int cual)//El radio de busqueda del recolector es de 2 casillas
+    {
+        int POSX = Recolectores.get(cual).getPosX();
+        int POSY = Recolectores.get(cual).getPosY();
+        boolean encontrado = false;
+        for (int i = 0; i < Aro1.length; i++) {//Primera vuelta
+            try {
+                if (botones[POSX + Aro1[i][0]][POSY + Aro1[i][1]].getBackground().equals(Color.YELLOW)
+                        || botones[POSX + Aro1[i][0]][POSY + Aro1[i][1]].getBackground().equals(Color.RED)) {
+                    encontrado = true;
+                    Recolectores.get(cual).setPositionOfObject(POSX + Aro1[i][0], POSY + Aro1[i][1]);
+                    break;
+                }
+            } catch (IndexOutOfBoundsException e) {
+                System.out.println(e.toString());
+            }
+        }
+        if (!encontrado) {
+            for (int i = 0; i < Aro2.length; i++) {//Segunda vuelta
+                try {
+                    if (botones[POSX + Aro2[i][0]][POSY + Aro2[i][1]].getBackground().equals(Color.YELLOW)
+                            || botones[POSX + Aro2[i][0]][POSY + Aro2[i][1]].getBackground().equals(Color.RED)) {
+                        encontrado = true;
+                        Recolectores.get(cual).setPositionOfObject(POSX + Aro2[i][0], POSY + Aro2[i][1]);
+                        break;
+                    }
+                } catch (IndexOutOfBoundsException e) {
+                    System.out.println(e.toString());
+                }
+            }
+        }
+        if (encontrado) {
+            analizarObjetoRecolector(cual);
+        }
+    }
+
+    private void analizarObjetoRecolector(int cual) {
+        int OBPOSX = Recolectores.get(cual).getObPosX();
+        int OBPOSY = Recolectores.get(cual).getObPosY();
+        if (botones[OBPOSX][OBPOSY].getBackground().equals(Color.red)) {
+            moveRandomRecolectores(cual);
+        } else {
+            Recolectores.get(cual).setTarea(true);
+        }
+    }
+
+    private void huir(int cual) {
+
+    }
+
+    private void recogerRecursoRecolector(int cual) {
+        int POSX = Recolectores.get(cual).getPosX();
+        int POSY = Recolectores.get(cual).getPosY();
+        int OBPOSX = Recolectores.get(cual).getObPosX();
+        int OBPOSY = Recolectores.get(cual).getObPosY();
+        int NEWPOSX = POSX;
+        int NEWPOSY = POSY;
+        if (POSX > OBPOSX) {
+            NEWPOSX = POSX - 1;
+        } else if (POSX < OBPOSX) {
+            NEWPOSX = POSX + 1;
+        }
+        if (POSY > OBPOSY) {
+            NEWPOSY = POSY - 1;
+        } else if (POSY < OBPOSY) {
+            NEWPOSY = POSY + 1;
+        }
+        if ((NEWPOSX == OBPOSX) && (NEWPOSY == OBPOSY)) {
+            Recolectores.get(cual).setOcupado(true);
+            for (int i = 0; i < Recursos.size(); i++){          
+               if (Recursos.get(i).getPosX()== (NEWPOSX)){
+                   Recursos.get(i).quitarVida();
+                   if (Recursos.get(i).getVida()==0){
+                       //cambiar recurso de lugar
+                   }
                }
             }
-        
-    }
+           
+        } else {
+            if (botones[NEWPOSX][NEWPOSY].getBackground().equals(Color.white)) {
+                Recolectores.get(cual).setPosition(NEWPOSX, NEWPOSY);
+                botones[POSX][POSY].setBackground(Color.white);
+                botones[NEWPOSX][NEWPOSY].setBackground(Color.blue);
+            }
+            else{
+                Recolectores.get(cual).setTarea(false);
+            }
         }
-  
+    }
+    
+    public void moveRecolectorToEnjambre(int cual)
+    {
+        int POSX = Recolectores.get(cual).getPosX();
+        int POSY = Recolectores.get(cual).getPosY();
+        int NEWPOSX = POSX;
+        int NEWPOSY = POSY;
+        if(!Recolectores.get(cual).perdido)
+        {
+            if(POSX==0 && POSY==0)
+            {
+                //System.out.println("Llegamos a la parada");
+            }
+            else if(POSX == 0 && POSY != 0)
+            {
+                NEWPOSY--;
+            }
+            else if(POSX != 0 && POSY == 0)
+            {
+                NEWPOSX--;
+            }
+            else
+            {
+                NEWPOSX--;
+                NEWPOSY--;
+            }
+            if(!botones[NEWPOSX][NEWPOSY].getBackground().equals(Color.black)
+               && !botones[NEWPOSX][NEWPOSY].getBackground().equals(Color.red)
+               && !botones[NEWPOSX][NEWPOSY].getBackground().equals(Color.yellow))
+            {
+                botones[POSX][POSY].setBackground(Color.white);
+                botones[NEWPOSX][NEWPOSY].setBackground(Color.blue);
+                Recolectores.get(cual).setPosition(NEWPOSX, NEWPOSY);
+                //System.out.println("CAMBIAR COLOR");
+            }
+            else{
+                moveRandomRecolectores(cual);
+                Recolectores.get(cual).perdido = true;
+            }
+        }
+        else
+        {
+            moveRandomRecolectores(cual);             //
+            Recolectores.get(cual).movPorPerdido--;
+            if(Recolectores.get(cual).movPorPerdido <= 0)
+            {
+                Recolectores.get(cual).movPorPerdido = 10;
+                Recolectores.get(cual).perdido = false;
+            }
+        }
+    }
+    
+     public void moveRandomDefensores(int cual) {
+        int AleaX, AleaY;
+        while (true) {
+            AleaX = rand.nextInt(3) - 1;
+            AleaY = rand.nextInt(3) - 1;
+            try {
+                if ((AleaX == 0 || AleaY == 0)) {
+                    if (AleaX != AleaY) {
+                        if (botones[Defensores.get(cual).getPosX() + AleaX][Defensores.get(cual).getPosY() + AleaY].getBackground().equals(Color.white)) {
+                            botones[Defensores.get(cual).getPosX() + AleaX][Defensores.get(cual).getPosY() + AleaY].setBackground(Color.green);
+                            botones[Defensores.get(cual).getPosX()][Defensores.get(cual).getPosY()].setBackground(Color.white);
+                            Defensores.get(cual).setPosition(Defensores.get(cual).getPosX() + AleaX, Defensores.get(cual).getPosY() + AleaY);
+                            break;
+                        }
+                    }
+                } else {
+                    if (botones[Defensores.get(cual).getPosX() + AleaX][Defensores.get(cual).getPosY() + AleaY].getBackground().equals(Color.white)) {
+                        botones[Defensores.get(cual).getPosX() + AleaX][Defensores.get(cual).getPosY() + AleaY].setBackground(Color.green);
+                        botones[Defensores.get(cual).getPosX()][Defensores.get(cual).getPosY()].setBackground(Color.white);
+                        Defensores.get(cual).setPosition(Defensores.get(cual).getPosX() + AleaX, Defensores.get(cual).getPosY() + AleaY);
+                        break;
+                    }
+                }
+            } catch (IndexOutOfBoundsException e) {
+
+            }
+        }
+    }
+
+    public void mapearEnDefensor(int cual)//El radio de busqueda del recolector es de 2 casillas
+    {
+        int POSX = Defensores.get(cual).getPosX();
+        int POSY = Defensores.get(cual).getPosY();
+        boolean encontrado = false;
+        for (int i = 0; i < Aro1.length; i++) {//Primera vuelta
+            try {
+                if (botones[POSX + Aro1[i][0]][POSY + Aro1[i][1]].getBackground().equals(Color.YELLOW)
+                        || botones[POSX + Aro1[i][0]][POSY + Aro1[i][1]].getBackground().equals(Color.RED)) {
+                    encontrado = true;
+                    Defensores.get(cual).setPositionOfObject(POSX + Aro1[i][0], POSY + Aro1[i][1]);
+                    break;
+                }
+            } catch (IndexOutOfBoundsException e) {
+                System.out.println(e.toString());
+            }
+        }
+        if (!encontrado) {
+            for (int i = 0; i < Aro2.length; i++) {//Segunda vuelta
+                try {
+                    if (botones[POSX + Aro2[i][0]][POSY + Aro2[i][1]].getBackground().equals(Color.YELLOW)
+                            || botones[POSX + Aro2[i][0]][POSY + Aro2[i][1]].getBackground().equals(Color.RED)) {
+                        encontrado = true;
+                        Defensores.get(cual).setPositionOfObject(POSX + Aro2[i][0], POSY + Aro2[i][1]);
+                        break;
+                    }
+                } catch (IndexOutOfBoundsException e) {
+                    //System.out.println(e.toString());
+                }
+            }
+        }
+        if (encontrado) {
+            analizarObjetoDefensor(cual);
+        }
+    }
+
+    private void analizarObjetoDefensor(int cual) {
+        int OBPOSX = Defensores.get(cual).getObPosX();
+        int OBPOSY = Defensores.get(cual).getObPosY();
+        if (botones[OBPOSX][OBPOSY].getBackground().equals(Color.red)) {
+            //atacar
+            moveRandomDefensores(cual);
+        } else {
+            Defensores.get(cual).setTarea(true);
+        }
+    }
+
+    private void recogerRecursoDefensor(int cual) {
+        int POSX = Defensores.get(cual).getPosX();
+        int POSY = Defensores.get(cual).getPosY();
+        int OBPOSX = Defensores.get(cual).getObPosX();
+        int OBPOSY = Defensores.get(cual).getObPosY();
+        int NEWPOSX = POSX;
+        int NEWPOSY = POSY;
+        if (POSX > OBPOSX) {
+            NEWPOSX = POSX - 1;
+        } else if (POSX < OBPOSX) {
+            NEWPOSX = POSX + 1;
+        }
+        if (POSY > OBPOSY) {
+            NEWPOSY = POSY - 1;
+        } else if (POSY < OBPOSY) {
+            NEWPOSY = POSY + 1;
+        }
+        if ((NEWPOSX == OBPOSX) && (NEWPOSY == OBPOSY)) {
+            Defensores.get(cual).setOcupado(true);
+            for (int i = 0; i < Recursos.size(); i++){          
+               if (Recursos.get(i).getPosX()== (NEWPOSX)){
+                   Recursos.get(i).quitarVida();
+                   if (Recursos.get(i).getVida()==0){
+                       //cambiar recurso de lugar
+                   }
+               }
+            }
+           
+        } else {
+            if (botones[NEWPOSX][NEWPOSY].getBackground().equals(Color.white)) {
+                Defensores.get(cual).setPosition(NEWPOSX, NEWPOSY);
+                botones[POSX][POSY].setBackground(Color.white);
+                botones[NEWPOSX][NEWPOSY].setBackground(Color.green);
+            }
+            else{
+                Defensores.get(cual).setTarea(false);
+            }
+        }
+    }
+    
+    public void moveDefensorToEnjambre(int cual)
+    {
+        int POSX = Defensores.get(cual).getPosX();
+        int POSY = Defensores.get(cual).getPosY();
+        int NEWPOSX = POSX;
+        int NEWPOSY = POSY;
+        if(!Defensores.get(cual).perdido)
+        {
+            if(POSX==0 && POSY==0)
+            {
+                //System.out.println("Llegamos a la parada");
+            }
+            else if(POSX == 0 && POSY != 0)
+            {
+                NEWPOSY--;
+            }
+            else if(POSX != 0 && POSY == 0)
+            {
+                NEWPOSX--;
+            }
+            else
+            {
+                NEWPOSX--;
+                NEWPOSY--;
+            }
+            if(!botones[NEWPOSX][NEWPOSY].getBackground().equals(Color.black)
+               && !botones[NEWPOSX][NEWPOSY].getBackground().equals(Color.red)
+               && !botones[NEWPOSX][NEWPOSY].getBackground().equals(Color.yellow))
+            {
+                botones[POSX][POSY].setBackground(Color.white);
+                botones[NEWPOSX][NEWPOSY].setBackground(Color.green);
+                Defensores.get(cual).setPosition(NEWPOSX, NEWPOSY);
+                //System.out.println("CAMBIAR COLOR");
+            }
+            else{
+                moveRandomDefensores(cual);
+                Defensores.get(cual).perdido = true;
+            }
+        }
+        else
+        {
+            moveRandomDefensores(cual);             //
+            Defensores.get(cual).movPorPerdido--;
+            if(Defensores.get(cual).movPorPerdido <= 0)
+            {
+                Defensores.get(cual).movPorPerdido = 10;
+                Defensores.get(cual).perdido = false;
+            }
+        }
+    }
 
     public void setInBotonesColor(int x, int y, int selection) {
-        if(selection == 0)
+        if (selection == 0) {
             botones[x][y].setBackground(Color.blue);
-        else
-           botones[x][y].setBackground(Color.red); 
+        } else {
+            botones[x][y].setBackground(Color.red);
+        }
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -225,4 +611,5 @@ public class Tablero extends javax.swing.JFrame {
     private javax.swing.JPanel pnlPantalla;
     private javax.swing.JPanel pnlPantalla2;
     // End of variables declaration//GEN-END:variables
+
 }
