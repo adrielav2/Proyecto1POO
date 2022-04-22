@@ -1,8 +1,7 @@
 package Enjambre;
 
-import Treads.threadTime;
+import Treads.ThreadPlay;
 import java.awt.Color;
-import java.awt.event.KeyListener;
 import java.util.ArrayList;
 import javax.swing.JButton;
 import java.util.Random;
@@ -34,7 +33,7 @@ public class Tablero extends javax.swing.JFrame {
     };
 
     JButton botones[][];
-    threadTime thread;
+    ThreadPlay thread = null;
 
     private ArrayList<Defensor> Defensores;
     private ArrayList<Recolector> Recolectores;
@@ -48,6 +47,7 @@ public class Tablero extends javax.swing.JFrame {
         rand = new Random();
         initTablero();
         this.setResizable(false);
+        btnStopThread.setEnabled(false);
         //thread = new threadTime(this);
         //thread.start();
     }
@@ -63,7 +63,16 @@ public class Tablero extends javax.swing.JFrame {
 
         pnlPantalla = new javax.swing.JPanel();
         pnlPantalla2 = new javax.swing.JPanel();
-        continuarBTN = new javax.swing.JButton();
+        btnContinuar = new javax.swing.JButton();
+        btnPlayThread = new javax.swing.JButton();
+        btnStopThread = new javax.swing.JButton();
+        lblMensaje = new javax.swing.JLabel();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -83,28 +92,117 @@ public class Tablero extends javax.swing.JFrame {
 
         pnlPantalla2.setBackground(new java.awt.Color(255, 255, 153));
 
-        continuarBTN.setText("Continuar");
-        continuarBTN.addActionListener(new java.awt.event.ActionListener() {
+        btnContinuar.setText("Continuar");
+        btnContinuar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                continuarBTNActionPerformed(evt);
+                btnContinuarActionPerformed(evt);
             }
         });
+
+        btnPlayThread.setText("Play");
+        btnPlayThread.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPlayThreadActionPerformed(evt);
+            }
+        });
+
+        btnStopThread.setText("Stop");
+        btnStopThread.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnStopThreadActionPerformed(evt);
+            }
+        });
+
+        jLabel1.setBackground(new java.awt.Color(0, 255, 0));
+        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel1.setText(" Defensores");
+        jLabel1.setOpaque(true);
+
+        jLabel2.setBackground(new java.awt.Color(51, 51, 255));
+        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel2.setText(" Recolectores");
+        jLabel2.setOpaque(true);
+
+        jLabel3.setBackground(new java.awt.Color(255, 0, 51));
+        jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel3.setText("Amenazas");
+        jLabel3.setOpaque(true);
+
+        jLabel4.setBackground(new java.awt.Color(255, 255, 0));
+        jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel4.setText(" Recursos");
+        jLabel4.setOpaque(true);
+
+        jLabel5.setBackground(new java.awt.Color(0, 0, 0));
+        jLabel5.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel5.setText(" Obstaculos");
+        jLabel5.setOpaque(true);
+
+        jLabel6.setBackground(new java.awt.Color(153, 153, 153));
+        jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel6.setText("Base de hormigas");
+        jLabel6.setOpaque(true);
 
         javax.swing.GroupLayout pnlPantalla2Layout = new javax.swing.GroupLayout(pnlPantalla2);
         pnlPantalla2.setLayout(pnlPantalla2Layout);
         pnlPantalla2Layout.setHorizontalGroup(
             pnlPantalla2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlPantalla2Layout.createSequentialGroup()
-                .addGap(41, 41, 41)
-                .addComponent(continuarBTN, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(43, Short.MAX_VALUE))
+                .addGroup(pnlPantalla2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(pnlPantalla2Layout.createSequentialGroup()
+                        .addGap(34, 34, 34)
+                        .addGroup(pnlPantalla2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(btnStopThread, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnPlayThread, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnContinuar, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(pnlPantalla2Layout.createSequentialGroup()
+                        .addGap(53, 53, 53)
+                        .addComponent(lblMensaje, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(pnlPantalla2Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(pnlPantalla2Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(pnlPantalla2Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(pnlPantalla2Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(pnlPantalla2Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(pnlPantalla2Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         pnlPantalla2Layout.setVerticalGroup(
             pnlPantalla2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlPantalla2Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(continuarBTN, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(293, 293, 293))
+                .addContainerGap()
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(lblMensaje)
+                .addGap(49, 49, 49)
+                .addComponent(btnContinuar, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(33, 33, 33)
+                .addComponent(btnPlayThread, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(27, 27, 27)
+                .addComponent(btnStopThread, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(191, 191, 191))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -128,6 +226,7 @@ public class Tablero extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    @SuppressWarnings("empty-statement")
     private void initTablero() {
         botones = new JButton[DIMENSION][DIMENSION];
         //pnlPantalla.setLayout(new java.awt.GridLayout(50, 50));
@@ -147,6 +246,8 @@ public class Tablero extends javax.swing.JFrame {
                 pnlPantalla.add(botones[i][j]);
             }
         }
+
+        botones[0][0].setBackground(Color.gray);
 
         //Este ciclo anidado genera los obtaculos de forma aleatorio
         Obstaculos = new <Obstaculo>ArrayList();
@@ -177,14 +278,14 @@ public class Tablero extends javax.swing.JFrame {
         Recursos = new <Recurso>ArrayList();
         int count = 0;
         while (count != 4) {
-            int num_rand1 = rand.nextInt(48);
-            int num_rand2 = rand.nextInt(48);
+            int num_rand1 = 10 + rand.nextInt(37);
+            int num_rand2 = 10 + rand.nextInt(37);
             if (botones[num_rand1][num_rand2].getBackground().equals(Color.white)) {
-                Recurso rec = new Recurso(num_rand1, num_rand2, num_rand1, num_rand2-1, num_rand1-1, num_rand2, num_rand1-1, num_rand2-1);
+                Recurso rec = new Recurso(num_rand1, num_rand2, num_rand1, num_rand2 + 1, num_rand1 + 1, num_rand2, num_rand1 + 1, num_rand2 + 1);
                 botones[num_rand1][num_rand2].setBackground(Color.yellow);
-                botones[num_rand1][num_rand2-1].setBackground(Color.yellow);
-                botones[num_rand1-1][num_rand2].setBackground(Color.yellow);
-                botones[num_rand1-1][num_rand2-1].setBackground(Color.yellow);
+                botones[num_rand1][num_rand2 + 1].setBackground(Color.yellow);
+                botones[num_rand1 + 1][num_rand2].setBackground(Color.yellow);
+                botones[num_rand1 + 1][num_rand2 + 1].setBackground(Color.yellow);
                 Recursos.add(rec);
                 count++;
             }
@@ -193,8 +294,8 @@ public class Tablero extends javax.swing.JFrame {
         Amenazas = new <Amenaza>ArrayList();
         int count2 = 0;
         while (count2 != 6) {
-            int num_rand1 = rand.nextInt(50);
-            int num_rand2 = rand.nextInt(50);
+            int num_rand1 = 10 + rand.nextInt(40);
+            int num_rand2 = 10 + rand.nextInt(40);
             if (botones[num_rand1][num_rand2].getBackground().equals(Color.white)) {
                 Amenaza amn = new Amenaza(num_rand1, num_rand2);
                 botones[num_rand1][num_rand2].setBackground(Color.red);
@@ -234,7 +335,33 @@ public class Tablero extends javax.swing.JFrame {
         System.out.println(evt.getComponent().getName());
     }
 
-    private void continuarBTNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_continuarBTNActionPerformed
+    private void btnContinuarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnContinuarActionPerformed
+        playOneTime();
+    }//GEN-LAST:event_btnContinuarActionPerformed
+
+    private void btnPlayThreadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPlayThreadActionPerformed
+
+        thread = new ThreadPlay(this);
+        thread.start();
+        btnContinuar.setEnabled(false);
+        btnPlayThread.setEnabled(false);
+        btnStopThread.setEnabled(true);
+    }//GEN-LAST:event_btnPlayThreadActionPerformed
+
+    private void btnStopThreadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnStopThreadActionPerformed
+        lblMensaje.setText("Espere un segundo");
+        thread.stopThread();
+    }//GEN-LAST:event_btnStopThreadActionPerformed
+
+    public void enabledBtns() {
+        thread = null;
+        btnContinuar.setEnabled(true);
+        btnPlayThread.setEnabled(true);
+        btnStopThread.setEnabled(false);
+        lblMensaje.setText("");
+    }
+
+    public void playOneTime() {
         for (int i = 0; i < Recolectores.size(); i++) {
             if (!(Recolectores.get(i).isOcupado() || Recolectores.get(i).isTarea())) {
                 mapearEnRecolector(i);
@@ -251,7 +378,9 @@ public class Tablero extends javax.swing.JFrame {
             if (!(Defensores.get(i).isOcupado() || Defensores.get(i).isTarea())) {
                 mapearEnDefensor(i);
             }
-            if (Defensores.get(i).isOcupado()) {
+            if (Defensores.get(i).isAmenaza()) {
+                atacarAmenaza(i);
+            } else if (Defensores.get(i).isOcupado()) {
                 moveDefensorToEnjambre(i);
             } else if (Defensores.get(i).isTarea()) {
                 recogerRecursoDefensor(i);
@@ -259,7 +388,8 @@ public class Tablero extends javax.swing.JFrame {
                 moveRandomDefensores(i);
             }
         }
-    }//GEN-LAST:event_continuarBTNActionPerformed
+        botones[0][0].setBackground(Color.gray);
+    }
 
     public void moveRandomRecolectores(int cual) {
         int AleaX, AleaY;
@@ -336,10 +466,6 @@ public class Tablero extends javax.swing.JFrame {
         }
     }
 
-    private void huir(int cual) {
-
-    }
-
     private void recogerRecursoRecolector(int cual) {
         int POSX = Recolectores.get(cual).getPosX();
         int POSY = Recolectores.get(cual).getPosY();
@@ -359,79 +485,121 @@ public class Tablero extends javax.swing.JFrame {
         }
         if ((NEWPOSX == OBPOSX) && (NEWPOSY == OBPOSY)) {
             Recolectores.get(cual).setOcupado(true);
-            for (int i = 0; i < Recursos.size(); i++){          
-               if (Recursos.get(i).getPosX()== (NEWPOSX)){
-                   Recursos.get(i).quitarVida();
-                   if (Recursos.get(i).getVida()==0){
-                       //cambiar recurso de lugar
-                   }
-               }
+            for (int i = 0; i < Recursos.size(); i++) {
+                if (Recursos.get(i).isTheObject(NEWPOSX, NEWPOSY)) {
+                    Recursos.get(i).quitarVida();
+                    if (Recursos.get(i).getVida() <= 0) {
+                        cambiarRecursoDeLugar(NEWPOSX, NEWPOSY);
+                    }
+                }
             }
-           
+
         } else {
             if (botones[NEWPOSX][NEWPOSY].getBackground().equals(Color.white)) {
                 Recolectores.get(cual).setPosition(NEWPOSX, NEWPOSY);
                 botones[POSX][POSY].setBackground(Color.white);
                 botones[NEWPOSX][NEWPOSY].setBackground(Color.blue);
-            }
-            else{
+            } else {
                 Recolectores.get(cual).setTarea(false);
             }
         }
     }
-    
-    public void moveRecolectorToEnjambre(int cual)
-    {
-        int POSX = Recolectores.get(cual).getPosX();
-        int POSY = Recolectores.get(cual).getPosY();
-        int NEWPOSX = POSX;
-        int NEWPOSY = POSY;
-        if(!Recolectores.get(cual).perdido)
-        {
-            if(POSX==0 && POSY==0)
-            {
-                //System.out.println("Llegamos a la parada");
-            }
-            else if(POSX == 0 && POSY != 0)
-            {
-                NEWPOSY--;
-            }
-            else if(POSX != 0 && POSY == 0)
-            {
-                NEWPOSX--;
-            }
-            else
-            {
-                NEWPOSX--;
-                NEWPOSY--;
-            }
-            if(!botones[NEWPOSX][NEWPOSY].getBackground().equals(Color.black)
-               && !botones[NEWPOSX][NEWPOSY].getBackground().equals(Color.red)
-               && !botones[NEWPOSX][NEWPOSY].getBackground().equals(Color.yellow))
-            {
-                botones[POSX][POSY].setBackground(Color.white);
-                botones[NEWPOSX][NEWPOSY].setBackground(Color.blue);
-                Recolectores.get(cual).setPosition(NEWPOSX, NEWPOSY);
-                //System.out.println("CAMBIAR COLOR");
-            }
-            else{
-                moveRandomRecolectores(cual);
-                Recolectores.get(cual).perdido = true;
-            }
-        }
-        else
-        {
-            moveRandomRecolectores(cual);             //
-            Recolectores.get(cual).movPorPerdido--;
-            if(Recolectores.get(cual).movPorPerdido <= 0)
-            {
-                Recolectores.get(cual).movPorPerdido = 10;
-                Recolectores.get(cual).perdido = false;
+
+    private void cambiarRecursoDeLugar(int NEWPOSX, int NEWPOSY) {
+        int newX;
+        int newY;
+        while (true) {
+            newX = 10 + rand.nextInt(37);
+            newY = 10 + rand.nextInt(37);
+            if (botones[newX][newY].getBackground().equals(Color.white)
+                    && botones[newX][newY + 1].getBackground().equals(Color.white)
+                    && botones[newX + 1][newY].getBackground().equals(Color.white)
+                    && botones[newX + 1][newY + 1].getBackground().equals(Color.white)) {
+                for (int i = 0; i < Recursos.size(); i++) {
+                    if (Recursos.get(i).isTheObject(NEWPOSX, NEWPOSY)) {
+                        botones[Recursos.get(i).posX][Recursos.get(i).posY].setBackground(Color.white);
+                        botones[Recursos.get(i).posX + 1][Recursos.get(i).posY].setBackground(Color.white);
+                        botones[Recursos.get(i).posX][Recursos.get(i).posY + 1].setBackground(Color.white);
+                        botones[Recursos.get(i).posX + 1][Recursos.get(i).posY + 1].setBackground(Color.white);
+                        Recursos.get(i).setNewPosition(newX, newY, newX, newY + 1, newX + 1, newY, newX + 1, newY + 1);
+                        botones[Recursos.get(i).posX][Recursos.get(i).posY].setBackground(Color.yellow);
+                        botones[Recursos.get(i).posX + 1][Recursos.get(i).posY].setBackground(Color.yellow);
+                        botones[Recursos.get(i).posX][Recursos.get(i).posY + 1].setBackground(Color.yellow);
+                        botones[Recursos.get(i).posX + 1][Recursos.get(i).posY + 1].setBackground(Color.yellow);
+                    }
+                }
+                break;
             }
         }
     }
+
+    public void moveRecolectorToEnjambre(int cual) {
+        int POSX = Recolectores.get(cual).getPosX();
+        
+        
+        int POSY = Recolectores.get(cual).getPosY();
+        int NEWPOSX = POSX;
+        int NEWPOSY = POSY;
+        if (!Recolectores.get(cual).perdido && !Recolectores.get(cual).saliendoDeEnjambre) {
+            if (POSX == 0 && POSY == 0) {
+                //System.out.println("Llegamos a la parada");
+            } else if (POSX == 0 && POSY != 0) {
+                NEWPOSY--;
+            } else if (POSX != 0 && POSY == 0) {
+                NEWPOSX--;
+            } else {
+                NEWPOSX--;
+                NEWPOSY--;
+            }
+            if (!botones[NEWPOSX][NEWPOSY].getBackground().equals(Color.black)
+                    && !botones[NEWPOSX][NEWPOSY].getBackground().equals(Color.red)
+                    && !botones[NEWPOSX][NEWPOSY].getBackground().equals(Color.yellow)) {
+                botones[POSX][POSY].setBackground(Color.white);
+                botones[NEWPOSX][NEWPOSY].setBackground(Color.blue);
+                Recolectores.get(cual).setPosition(NEWPOSX, NEWPOSY);
+                if (NEWPOSX == 0 && NEWPOSY == 0) {
+                    Recolectores.get(cual).saliendoDeEnjambre = true;
+                }
+            } else {
+                moveRandomRecolectores(cual);
+                Recolectores.get(cual).perdido = true;
+            }
+        } else if (Recolectores.get(cual).perdido && !Recolectores.get(cual).saliendoDeEnjambre) {
+            moveRandomRecolectores(cual);             //
+            Recolectores.get(cual).movPorPerdido--;
+            if (Recolectores.get(cual).movPorPerdido <= 0) {
+                Recolectores.get(cual).movPorPerdido = 10;
+                Recolectores.get(cual).perdido = false;
+            }
+        } else {
+//            POSX++;
+//            POSY++;
+            if (!botones[POSX + 1][POSY + 1].getBackground().equals(Color.red)
+                    && !botones[POSX + 1][POSY + 1].getBackground().equals(Color.black)
+                    && !botones[POSX + 1][POSY + 1].getBackground().equals(Color.yellow)) {
+                botones[POSX][POSY].setBackground(Color.white);
+                botones[POSX + 1][POSY + 1].setBackground(Color.blue);
+                Recolectores.get(cual).setPosition(POSX + 1, POSY + 1);
+                Recolectores.get(cual).pasosAfuera--;
+                if (Recolectores.get(cual).pasosAfuera == 0) {
+                    Recolectores.get(cual).pasosAfuera = 10;
+                    Recolectores.get(cual).setOcupado(false);
+                    Recolectores.get(cual).setTarea(false);
+                    Recolectores.get(cual).saliendoDeEnjambre = false;
+                }
+            } else {
+                Recolectores.get(cual).pasosAfuera = 10;
+                Recolectores.get(cual).setOcupado(false);
+                Recolectores.get(cual).setTarea(false);
+                Recolectores.get(cual).saliendoDeEnjambre = false;
+                moveRandomRecolectores(cual);
+            }
+        }
+    }   
+
     
-     public void moveRandomDefensores(int cual) {
+
+    public void moveRandomDefensores(int cual) {
         int AleaX, AleaY;
         while (true) {
             AleaX = rand.nextInt(3) - 1;
@@ -500,10 +668,70 @@ public class Tablero extends javax.swing.JFrame {
         int OBPOSX = Defensores.get(cual).getObPosX();
         int OBPOSY = Defensores.get(cual).getObPosY();
         if (botones[OBPOSX][OBPOSY].getBackground().equals(Color.red)) {
-            //atacar
-            moveRandomDefensores(cual);
+            Defensores.get(cual).setAmenaza(true);
         } else {
             Defensores.get(cual).setTarea(true);
+        }
+    }
+
+    private void atacarAmenaza(int cual) {
+        int POSX = Defensores.get(cual).getPosX();
+        int POSY = Defensores.get(cual).getPosY();
+        int OBPOSX = Defensores.get(cual).getObPosX();
+        int OBPOSY = Defensores.get(cual).getObPosY();
+        int NEWPOSX = POSX;
+        int NEWPOSY = POSY;
+        if (POSX > OBPOSX) {
+            NEWPOSX = POSX - 1;
+        } else if (POSX < OBPOSX) {
+            NEWPOSX = POSX + 1;
+        }
+        if (POSY > OBPOSY) {
+            NEWPOSY = POSY - 1;
+        } else if (POSY < OBPOSY) {
+            NEWPOSY = POSY + 1;
+        }
+        if ((NEWPOSX == OBPOSX) && (NEWPOSY == OBPOSY)) {
+            for (int i = 0; i < Defensores.size(); i++) {
+                if (Amenazas.get(i).confirmAmenaza(NEWPOSX, NEWPOSY)) {
+                    Amenazas.get(i).quitarVida();
+                    if (Amenazas.get(i).getVida() <= 0) {
+                        changePositionOfAmenaza(NEWPOSX, NEWPOSY);
+                        Defensores.get(cual).setAmenaza(false);
+                    }
+                    break;
+                }
+            }
+        } else {
+            if (botones[NEWPOSX][NEWPOSY].getBackground().equals(Color.white)) {
+                Defensores.get(cual).setPosition(NEWPOSX, NEWPOSY);
+                botones[POSX][POSY].setBackground(Color.white);
+                botones[NEWPOSX][NEWPOSY].setBackground(Color.green);
+            } else {
+                Defensores.get(cual).setTarea(false);
+                Defensores.get(cual).setAmenaza(false);
+            }
+        }
+
+    }
+
+    private void changePositionOfAmenaza(int NEWPOSX, int NEWPOSY) {
+        int newX;
+        int newY;
+        for (int i = 0; i < Amenazas.size(); i++) {
+            if (Amenazas.get(i).confirmAmenaza(NEWPOSX, NEWPOSY)) {
+                while (true) {
+                    newX = rand.nextInt(40) + 10;
+                    newY = rand.nextInt(40) + 10;
+                    if (botones[newX][newY].getBackground().equals(Color.white)) {
+                        botones[newX][newY].setBackground(Color.red);
+                        botones[Amenazas.get(i).getPosX()][Amenazas.get(i).getPosY()].setBackground(Color.white);
+                        Amenazas.get(i).setNewPosition(newX, newY);
+                        break;
+                    }
+                }
+                break;
+            }
         }
     }
 
@@ -526,88 +754,99 @@ public class Tablero extends javax.swing.JFrame {
         }
         if ((NEWPOSX == OBPOSX) && (NEWPOSY == OBPOSY)) {
             Defensores.get(cual).setOcupado(true);
-            for (int i = 0; i < Recursos.size(); i++){          
-               if (Recursos.get(i).getPosX()== (NEWPOSX)){
-                   Recursos.get(i).quitarVida();
-                   if (Recursos.get(i).getVida()==0){
-                       //cambiar recurso de lugar
-                   }
-               }
+            for (int i = 0; i < Recursos.size(); i++) {
+                if (Recursos.get(i).isTheObject(NEWPOSX, NEWPOSY)) {
+                    Recursos.get(i).quitarVida();
+                    if (Recursos.get(i).getVida() == 0) {
+                        cambiarRecursoDeLugar(NEWPOSX, NEWPOSY);
+                    }
+                }
             }
-           
+
         } else {
             if (botones[NEWPOSX][NEWPOSY].getBackground().equals(Color.white)) {
                 Defensores.get(cual).setPosition(NEWPOSX, NEWPOSY);
                 botones[POSX][POSY].setBackground(Color.white);
                 botones[NEWPOSX][NEWPOSY].setBackground(Color.green);
-            }
-            else{
+            } else {
                 Defensores.get(cual).setTarea(false);
             }
         }
     }
-    
-    public void moveDefensorToEnjambre(int cual)
-    {
+
+    public void moveDefensorToEnjambre(int cual) {
         int POSX = Defensores.get(cual).getPosX();
         int POSY = Defensores.get(cual).getPosY();
         int NEWPOSX = POSX;
         int NEWPOSY = POSY;
-        if(!Defensores.get(cual).perdido)
-        {
-            if(POSX==0 && POSY==0)
-            {
+        if (!Defensores.get(cual).perdido && !Defensores.get(cual).saliendoDeEnjambre) {
+            if (POSX == 0 && POSY == 0) {
                 //System.out.println("Llegamos a la parada");
-            }
-            else if(POSX == 0 && POSY != 0)
-            {
+            } else if (POSX == 0 && POSY != 0) {
                 NEWPOSY--;
-            }
-            else if(POSX != 0 && POSY == 0)
-            {
+            } else if (POSX != 0 && POSY == 0) {
                 NEWPOSX--;
-            }
-            else
-            {
+            } else {
                 NEWPOSX--;
                 NEWPOSY--;
             }
-            if(!botones[NEWPOSX][NEWPOSY].getBackground().equals(Color.black)
-               && !botones[NEWPOSX][NEWPOSY].getBackground().equals(Color.red)
-               && !botones[NEWPOSX][NEWPOSY].getBackground().equals(Color.yellow))
-            {
+            if (!botones[NEWPOSX][NEWPOSY].getBackground().equals(Color.black)
+                    && !botones[NEWPOSX][NEWPOSY].getBackground().equals(Color.red)
+                    && !botones[NEWPOSX][NEWPOSY].getBackground().equals(Color.yellow)) {
                 botones[POSX][POSY].setBackground(Color.white);
                 botones[NEWPOSX][NEWPOSY].setBackground(Color.green);
                 Defensores.get(cual).setPosition(NEWPOSX, NEWPOSY);
-                //System.out.println("CAMBIAR COLOR");
-            }
-            else{
+                if (NEWPOSX == 0 && NEWPOSY == 0) {
+                    Defensores.get(cual).saliendoDeEnjambre = true;
+                }
+            } else {
                 moveRandomDefensores(cual);
                 Defensores.get(cual).perdido = true;
             }
-        }
-        else
-        {
+        } else if(Defensores.get(cual).perdido && !Defensores.get(cual).saliendoDeEnjambre){
             moveRandomDefensores(cual);             //
             Defensores.get(cual).movPorPerdido--;
-            if(Defensores.get(cual).movPorPerdido <= 0)
-            {
+            if (Defensores.get(cual).movPorPerdido <= 0) {
                 Defensores.get(cual).movPorPerdido = 10;
                 Defensores.get(cual).perdido = false;
             }
         }
-    }
-
-    public void setInBotonesColor(int x, int y, int selection) {
-        if (selection == 0) {
-            botones[x][y].setBackground(Color.blue);
-        } else {
-            botones[x][y].setBackground(Color.red);
+        else
+        {
+            if (!botones[POSX + 1][POSY + 1].getBackground().equals(Color.red)
+                    && !botones[POSX + 1][POSY + 1].getBackground().equals(Color.black)
+                    && !botones[POSX + 1][POSY + 1].getBackground().equals(Color.yellow)) {
+                botones[POSX][POSY].setBackground(Color.white);
+                botones[POSX + 1][POSY + 1].setBackground(Color.green);
+                Defensores.get(cual).setPosition(POSX + 1, POSY + 1);
+                Defensores.get(cual).pasosAfuera--;
+                if (Defensores.get(cual).pasosAfuera == 0) {
+                    Defensores.get(cual).pasosAfuera = 10;
+                    Defensores.get(cual).setOcupado(false);
+                    Defensores.get(cual).setTarea(false);
+                    Defensores.get(cual).saliendoDeEnjambre = false;
+                }
+            } else {
+                Defensores.get(cual).pasosAfuera = 10;
+                Defensores.get(cual).setOcupado(false);
+                Defensores.get(cual).setTarea(false);
+                Defensores.get(cual).saliendoDeEnjambre = false;
+                moveRandomDefensores(cual);
+            }
         }
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton continuarBTN;
+    private javax.swing.JButton btnContinuar;
+    private javax.swing.JButton btnPlayThread;
+    private javax.swing.JButton btnStopThread;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel lblMensaje;
     private javax.swing.JPanel pnlPantalla;
     private javax.swing.JPanel pnlPantalla2;
     // End of variables declaration//GEN-END:variables

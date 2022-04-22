@@ -19,10 +19,21 @@ public class Defensor extends AgenteBase{
     boolean perdido;
     int movPorPerdido = 10;
     
+    private boolean encontreAmenaza;
+    
+    public boolean saliendoDeEnjambre;
+    public int pasosAfuera;
+    
     public Defensor(int vida, int posX, int posY) {
         super(vida);
         this.posX = posX;
         this.posY = posY;
+        ocupado = false;
+        tarea = false;
+        perdido = false;
+        encontreAmenaza = false;
+        saliendoDeEnjambre = false;
+        this.pasosAfuera = 10;
     }
     
     public void setPosition(int posX, int posY){
@@ -66,4 +77,14 @@ public class Defensor extends AgenteBase{
     {
         return this.tarea;
     }
+
+    public boolean isAmenaza() {
+        return encontreAmenaza;
+    }
+
+    public void setAmenaza(boolean encontreAmenaza) {
+        this.encontreAmenaza = encontreAmenaza;
+    }
+    
+    
 }

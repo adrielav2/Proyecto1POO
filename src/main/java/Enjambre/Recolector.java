@@ -1,14 +1,6 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package Enjambre;
 
-/**
- *
- * @author Ana
- */
 public class Recolector extends AgenteBase {
 
     private int posX, posY;
@@ -19,13 +11,18 @@ public class Recolector extends AgenteBase {
     
     boolean perdido;
     int movPorPerdido = 10;
+    
+    public boolean saliendoDeEnjambre;
+    public int pasosAfuera;
 
     public Recolector(int vida, int posX, int posY) {
         super(vida);
         this.posX = posX;
         this.posY = posY;
         this.ocupado = false;
-        perdido = false;
+        this.perdido = false;
+        this.saliendoDeEnjambre = false;
+        this.pasosAfuera = 10;
     }
 
     public void setPosition(int posX, int posY) {
